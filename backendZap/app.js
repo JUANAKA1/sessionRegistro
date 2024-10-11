@@ -7,9 +7,11 @@ const md5 = require('md5')
 const bcrypt = require('bcrypt');
 const login = require('./login');
 const registro = require('./registro');
-const { eliminarUsuario, obtenerUsuarios } = require('./usuarios');
+const { eliminarUsuario, obtenerUsuarios, editarUsuario } = require('./usuarios');
 const validar = require('./validar');
 const saltRounds = 10;
+
+app.use(express.json());
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -33,6 +35,8 @@ app.get('/registro', registro)
 app.get('/usuarios', obtenerUsuarios)
 
 app.delete('/usuarios', eliminarUsuario)
+
+app.put('/usuarios', editarUsuario)
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
