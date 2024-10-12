@@ -52,15 +52,15 @@ const editarUsuario = async (req, res) => {
         res.status(401).send('No autorizado');
         return;
     }
-    const { id, usuario, clave } = req.body;
-
+    const { id, usuario, clave, nombre, email, cc, telefono } = req.body;
+    
     try {
         // Encripta la contraseña antes de guardarla
         const hashedPassword = await bcrypt.hash(clave, saltRounds);
 
         const [results, fields] = await connection.query(
-            "UPDATE usuarios SET usuario = ?, clave = ? WHERE id = ?",
-            [usuario, hashedPassword, id]
+            "UPDATE usuarios SET usuario = ?, clave = ?, nombre = ?, email = ?, cc = ?, telefono = ? WHERE id = ?",
+            [usuario, hashedPassword, nombre, email, cc, telefono, id]
         );
 
         if (results.affectedRows > 0) {
