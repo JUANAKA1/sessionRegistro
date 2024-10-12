@@ -1,84 +1,96 @@
-import { useEffect, useState } from 'react' // Importación de hooks useEffect y useState de React
-import './App.css' // Importación del archivo CSS para estilos
-import Conversor from './Conversor' // Importación del componente Conversor
-import Usuarios from './Usuarios' // Importación del componente Usuarios
-import Registro from './Registro' // Importación del componente Registro
-import RegistroProductos from './RegistroProductos'
+import { useEffect, useState } from 'react'; // Importación de hooks useEffect y useState de React
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Importación de react-router-dom
+import './App.css'; // Importación del archivo CSS para estilos
+import Conversor from './Conversor'; // Importación del componente Conversor
+import Usuarios from './Usuarios'; // Importación del componente Usuarios
+import Registro from './Registro'; // Importación del componente Registro
+import RegistroProductos from './RegistroProductos'; // Importación del componente RegistroProductos
+import Productos from './Productos'; // Importación del componente Productos
+import Navbar from './navbar'; // Asegúrate de que el nombre sea correcto
 
 function App() {
   // Declaración de estados con useState
-  const [usuario, setUsuario] = useState('') // Estado para guardar el nombre de usuario
-  const [clave, setClave] = useState('') // Estado para guardar la clave
-  const [logeado, setLogeado] = useState(false) // Estado para indicar si el usuario está logeado
-  const [recargar, setRecargar] = useState(false) // Estado para controlar la recarga de componentes
+  const [usuario, setUsuario] = useState(''); // Estado para guardar el nombre de usuario
+  const [clave, setClave] = useState(''); // Estado para guardar la clave
+  const [logeado, setLogeado] = useState(false); // Estado para indicar si el usuario está logeado
+  const [recargar, setRecargar] = useState(false); // Estado para controlar la recarga de componentes
+  const [mostrarRegistro, setMostrarRegistro] = useState(false); // Estado para controlar la visibilidad del formulario de registro
 
   // Función para cambiar el valor del usuario al escribir en el input
   function cambiarUsuario(evento) {
-    setUsuario(evento.target.value) // Actualiza el estado del usuario con el valor del input
+    setUsuario(evento.target.value); // Actualiza el estado del usuario con el valor del input
   }
-  
+
   // Función para cambiar el valor de la clave al escribir en el input
   function cambiarClave(evento) {
-    setClave(evento.target.value) // Actualiza el estado de la clave con el valor del input
+    setClave(evento.target.value); // Actualiza el estado de la clave con el valor del input
   }
 
   // Función para alternar el estado de recargar
   function recargarAhora() {
-    setRecargar(!recargar) // Cambia el valor de recargar al valor contrario
+    setRecargar(!recargar); // Cambia el valor de recargar al valor contrario
   }
 
   // Función para manejar el ingreso al hacer clic en el botón
   async function ingresar() {
-    // Realiza una solicitud a la API para autenticar al usuario
-    const peticion = await fetch('http://localhost:3000/login?usuario=' + usuario + '&clave=' + clave, { credentials: 'include' })
-    
-    // Si la respuesta es exitosa
+    const peticion = await fetch(`http://localhost:3000/login?usuario=${usuario}&clave=${clave}`, { credentials: 'include' });
     if (peticion.ok) {
-      setLogeado(true) // Cambia el estado logeado a verdadero
+      setLogeado(true); // Cambia el estado logeado a verdadero
     } else {
-      alert('usuario o clave incorrectos') // Muestra un mensaje de error
+      alert('usuario o clave incorrectos'); // Muestra un mensaje de error
     }
   }
 
   // Función para validar si el usuario ya está logueado
   async function validar() {
-    // Realiza una solicitud a la API para verificar la sesión del usuario
-    const peticion = await fetch('http://localhost:3000/validar?usuario=' + usuario, { credentials: 'include' })
-    
-    // Si la respuesta es exitosa
+    const peticion = await fetch(`http://localhost:3000/validar?usuario=${usuario}`, { credentials: 'include' });
     if (peticion.ok) {
-      setLogeado(true) // Cambia el estado logeado a verdadero
+      setLogeado(true); // Cambia el estado logeado a verdadero
     }
   }
 
   // Hook useEffect para validar al cargar el componente
   useEffect(() => {
-    validar() // Llama a la función validar al montar el componente
+    validar(); // Llama a la función validar al montar el componente
   }, []);
 
-  // Renderiza la interfaz dependiendo del estado logeado
-  if (logeado) {
-    return (
-      <>
-        <Registro recargarAhora={recargarAhora} /> 
-        <Conversor /> 
-        <Usuarios recargar={recargar} /> 
-        
-      </>
-    )
+  // Función para alternar la visibilidad del formulario de registro
+  function toggleRegistro() {
+    setMostrarRegistro(!mostrarRegistro); // Cambia el estado de mostrarRegistro al valor contrario
   }
-  
-  return (
-    <>
-      <h1>Inicio de sesión</h1> 
-      <input placeholder='Usuario' id='usuario' type="text" value={usuario} onChange={cambiarUsuario} /> 
-      <input placeholder='Clave' id='clave' type="password" value={clave} onChange={cambiarClave} /> 
-      <button type="submit" onClick={ingresar}>Ingresar</button> 
-      < RegistroProductos/>
-      <Registro />
 
-    </>
-  )
+  return (
+    <Router>
+      {logeado ? (
+        <>
+          <Navbar /> {/* Barra de navegación aquí */}
+          <Routes>
+            <Route path="/usuarios" element={<Usuarios recargar={recargar} />} />
+            <Route path="/productos" element={<Productos recargar={recargar} />} />
+            <Route path="/registro" element={<Registro recargarAhora={recargarAhora}/>} /> 
+            <Route path="/registroProductos" element={<RegistroProductos recargarAhora={recargarAhora}/>} /> 
+            <Route path="/conversor" element={<Conversor />} />
+            <Route path="*" element={<Navigate to="/usuarios" />} /> {/* Redirige a la ruta por defecto */}
+          </Routes>
+        </>
+      ) : (
+        <div>
+          <h1>Inicio de sesión</h1>
+          <input placeholder='Usuario' id='usuario' type="text" value={usuario} onChange={cambiarUsuario} />
+          <input placeholder='Clave' id='clave' type="password" value={clave} onChange={cambiarClave} />
+          <button type="submit" onClick={ingresar}>Ingresar</button>
+          
+          {/* Botón para mostrar el formulario de registro */}
+          <button onClick={toggleRegistro}>
+            {mostrarRegistro ? 'Registro' : '¿Desea Registrarse ?'}
+          </button>
+          
+          {/* Mostrar el formulario de registro solo si mostrarRegistro es verdadero */}
+          {mostrarRegistro && <Registro recargarAhora={recargarAhora} />}
+        </div>
+      )}
+    </Router>
+  );
 }
 
-export default App // Exporta el componente App para usarlo en otras partes de la aplicación
+export default App; // Exporta el componente App para usarlo en otras partes de la aplicación

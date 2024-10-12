@@ -1,0 +1,28 @@
+/* Navbar.css */
+.navbar {
+    background-color: #141d27; /* Color de fondo claro */
+    padding: 1rem; /* Espaciado interno */
+    border-bottom: 1px solid #17181a; /* Línea inferior */
+  }
+  
+  .navbar ul {
+    list-style: none; /* Eliminar los puntos de la lista */
+    padding: 0; /* Eliminar el padding */
+    margin: 0; /* Eliminar el margen */
+    display: flex; /* Usar flexbox para la disposición */
+  }
+  
+  .navbar li {
+    margin-right: 20px; /* Espacio entre elementos de la lista */
+  }
+  
+  .navbar a {
+    text-decoration: none; /* Eliminar el subrayado */
+    color: #007bff; /* Color del texto */
+    font-weight: bold; /* Negrita para el texto */
+  }
+  
+  .navbar a:hover {
+    color: #0056b3; /* Color al pasar el ratón */
+  }
+  
