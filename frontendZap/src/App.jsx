@@ -3,6 +3,7 @@ import './App.css' // Importación del archivo CSS para estilos
 import Conversor from './Conversor' // Importación del componente Conversor
 import Usuarios from './Usuarios' // Importación del componente Usuarios
 import Registro from './Registro' // Importación del componente Registro
+import RegistroProductos from './RegistroProductos'
 
 function App() {
   // Declaración de estados con useState
@@ -62,6 +63,7 @@ function App() {
         <Registro recargarAhora={recargarAhora} /> 
         <Conversor /> 
         <Usuarios recargar={recargar} /> 
+        
       </>
     )
   }
@@ -72,7 +74,9 @@ function App() {
       <input placeholder='Usuario' id='usuario' type="text" value={usuario} onChange={cambiarUsuario} /> 
       <input placeholder='Clave' id='clave' type="password" value={clave} onChange={cambiarClave} /> 
       <button type="submit" onClick={ingresar}>Ingresar</button> 
+      < RegistroProductos/>
       <Registro />
+
     </>
   )
 }

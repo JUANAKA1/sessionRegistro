@@ -9,6 +9,7 @@ const login = require('./login');
 const registro = require('./registro');
 const { eliminarUsuario, obtenerUsuarios, editarUsuario } = require('./usuarios');
 const validar = require('./validar');
+const registroProductos = require('./registroProductos')
 const saltRounds = 10;
 
 app.use(express.json());
@@ -37,6 +38,8 @@ app.get('/usuarios', obtenerUsuarios)
 app.delete('/usuarios', eliminarUsuario)
 
 app.put('/usuarios', editarUsuario)
+
+app.post('/registroProductos', registroProductos)
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
