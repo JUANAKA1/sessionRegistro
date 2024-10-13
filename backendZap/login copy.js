@@ -10,19 +10,11 @@ const login = async (req, res) => { // Función para manejar el inicio de sesió
             [datos.usuario] // Usa el nombre de usuario de los datos de la consulta
         );
 
-        // Mostrar la clave encriptada (esto no debería hacerse en producción)
-        console.log(bcrypt.hashSync(datos.clave, saltRounds)); 
+        console.log(bcrypt.hashSync(datos.clave, saltRounds)); // Muestra en la consola la clave encriptada (esto no debería hacerse en producción)
 
-        // Verifica si hay un usuario y si la contraseña coincide
-        if (results.length > 0 && bcrypt.compareSync(datos.clave, results[0].clave)) {
+        if (results.length > 0 && bcrypt.compareSync(datos.clave, results[0].clave)) { // Verifica si hay un usuario y si la contraseña coincide
             req.session.usuario = datos.usuario; // Se crea la sesión con el nombre de usuario
-            req.session.tipo_usuario = results[0].tipo_usuario; // Guarda el rol del usuario en la sesión
-            
-            // Respuesta de éxito con el rol del usuario
-            res.status(200).send({
-                mensaje: 'Inicio de sesión correcto',
-                tipo_usuario: req.session.tipo_usuario // Enviar el rol como parte de la respuesta
-            });
+            res.status(200).send('Inicio de sesión correcto'); // Respuesta de éxito
         } else {
             res.status(401).send('Datos incorrectos'); // Respuesta de error si el usuario o la contraseña son incorrectos
         }

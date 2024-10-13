@@ -1,8 +1,7 @@
 const connection = require("./conexion");
 
 const obtenerProductos = async (req, res) => { // Función para obtener la lista de productos
-    if (!req.session.usuario) { // Verifica si el usuario está autenticado
-        res.status(401).send('No autorizado'); // Respuesta de no autorizado si no hay sesión
+    if (!req.session.usuario || req.session.tipo_usuario !== 'administrador') { // Verifica si el usuario está autenticado y es administrador       
         return;
     }
     try {
@@ -20,8 +19,7 @@ const obtenerProductos = async (req, res) => { // Función para obtener la lista
 }
 
 const eliminarProducto = async (req, res) => { // Función para eliminar un producto
-    if (!req.session.usuario) { // Verifica si el usuario está autenticado
-        res.status(401).send('No autorizado'); // Respuesta de no autorizado si no hay sesión
+    if (!req.session.usuario || req.session.tipo_usuario !== 'administrador') { // Verifica si el usuario está autenticado y es administrador   
         return;
     }
     const datos = req.query; // Obtiene los datos de la consulta (query parameters)
@@ -45,8 +43,7 @@ const eliminarProducto = async (req, res) => { // Función para eliminar un prod
 }
 
 const editarProducto = async (req, res) => { // Función para editar un producto
-    if (!req.session.usuario) { // Verifica si el usuario está autenticado
-        res.status(401).send('No autorizado'); // Respuesta de no autorizado si no hay sesión
+    if (!req.session.usuario || req.session.tipo_usuario !== 'administrador') { // Verifica si el usuario está autenticado y es administrador        res.status(401).send('No autorizado'); // Respuesta de no autorizado si no hay sesión
         return;
     }
     const { id, nombre, descripcion, precio, talla, color, unidades, categoria } = req.body; // Obtiene los datos del cuerpo de la solicitud

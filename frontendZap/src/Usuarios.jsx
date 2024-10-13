@@ -85,6 +85,7 @@ function Usuarios({ recargar }) {
 
   return (
     <>
+    <h1>Listado de Usuarios</h1>
       <table>
         <thead>
           <tr>

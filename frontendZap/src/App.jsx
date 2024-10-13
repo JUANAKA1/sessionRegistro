@@ -15,7 +15,7 @@ function App() {
   const [logeado, setLogeado] = useState(false); // Estado para indicar si el usuario está logeado
   const [recargar, setRecargar] = useState(false); // Estado para controlar la recarga de componentes
   const [mostrarRegistro, setMostrarRegistro] = useState(false); // Estado para controlar la visibilidad del formulario de registro
-
+  const [tipoUsuario, setTipoUsuario] = useState(''); // Estado para almacenar el tipo de usuario
   // Función para cambiar el valor del usuario al escribir en el input
   function cambiarUsuario(evento) {
     setUsuario(evento.target.value); // Actualiza el estado del usuario con el valor del input
@@ -35,11 +35,13 @@ function App() {
   async function ingresar() {
     const peticion = await fetch(`http://localhost:3000/login?usuario=${usuario}&clave=${clave}`, { credentials: 'include' });
     if (peticion.ok) {
-      setLogeado(true); // Cambia el estado logeado a verdadero
+        const datos = await peticion.json(); // Suponiendo que el backend devuelve el tipo de usuario
+        setLogeado(true);
+        setTipoUsuario(datos.tipo_usuario); // Almacena el tipo de usuario
     } else {
-      alert('usuario o clave incorrectos'); // Muestra un mensaje de error
+        alert('usuario o clave incorrectos');
     }
-  }
+}
 
   // Función para validar si el usuario ya está logueado
   async function validar() {
@@ -59,38 +61,43 @@ function App() {
     setMostrarRegistro(!mostrarRegistro); // Cambia el estado de mostrarRegistro al valor contrario
   }
 
-  return (
-    <Router>
-      {logeado ? (
-        <>
-          <Navbar /> {/* Barra de navegación aquí */}
-          <Routes>
-            <Route path="/usuarios" element={<Usuarios recargar={recargar} />} />
-            <Route path="/productos" element={<Productos recargar={recargar} />} />
-            <Route path="/registro" element={<Registro recargarAhora={recargarAhora}/>} /> 
-            <Route path="/registroProductos" element={<RegistroProductos recargarAhora={recargarAhora}/>} /> 
-            <Route path="/conversor" element={<Conversor />} />
-            <Route path="*" element={<Navigate to="/usuarios" />} /> {/* Redirige a la ruta por defecto */}
-          </Routes>
-        </>
-      ) : (
-        <div>
-          <h1>Inicio de sesión</h1>
-          <input placeholder='Usuario' id='usuario' type="text" value={usuario} onChange={cambiarUsuario} />
-          <input placeholder='Clave' id='clave' type="password" value={clave} onChange={cambiarClave} />
-          <button type="submit" onClick={ingresar}>Ingresar</button>
-          
-          {/* Botón para mostrar el formulario de registro */}
-          <button onClick={toggleRegistro}>
-            {mostrarRegistro ? 'Registro' : '¿Desea Registrarse ?'}
-          </button>
-          
-          {/* Mostrar el formulario de registro solo si mostrarRegistro es verdadero */}
-          {mostrarRegistro && <Registro recargarAhora={recargarAhora} />}
-        </div>
-      )}
-    </Router>
-  );
+
+     return (
+        <Router>
+            {logeado ? (
+                <>
+                    <Navbar tipoUsuario={tipoUsuario} /> {/* Pasa el tipo de usuario al Navbar */}
+                    <Routes>
+                        <Route path="/conversor" element={<Conversor />} />
+                        
+                        {tipoUsuario === 'administrador' && (
+                            <>
+                                <Route path="/usuarios" element={<Usuarios recargar={recargar} />} />
+                                <Route path="/registro" element={<Registro recargarAhora={recargarAhora} />} />
+                                <Route path="/registroProductos" element={<RegistroProductos recargarAhora={recargarAhora} />} />
+                            </>
+                        )}
+
+                        <Route path="/productos" element={<Productos recargar={recargar} />} />
+                        <Route path="*" element={<Navigate to="/conversor" />} />
+                    </Routes>
+                </>
+            ) : (
+                <div>
+                    <h1>Inicio de sesión</h1>
+                    <input placeholder='Usuario' id='usuario' type="text" value={usuario} onChange={cambiarUsuario} />
+                    <input placeholder='Clave' id='clave' type="password" value={clave} onChange={cambiarClave} />
+                    <button type="submit" onClick={ingresar}>Ingresar</button>
+                    
+                    <button onClick={toggleRegistro}>
+                        {mostrarRegistro ? 'Registro' : '¿Desea Registrarse ?'}
+                    </button>
+                    
+                    {mostrarRegistro && <Registro recargarAhora={recargarAhora} />}
+                </div>
+            )}
+        </Router>
+);
 }
 
 export default App; // Exporta el componente App para usarlo en otras partes de la aplicación

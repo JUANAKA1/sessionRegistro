@@ -3,9 +3,8 @@ const bcrypt = require('bcrypt'); // Importa bcrypt para encriptar contraseñas
 const saltRounds = 10; // Define el número de rondas para la encriptación de la contraseña
 
 const obtenerUsuarios = async (req, res) => { // Función para obtener la lista de usuarios
-    if (!req.session.usuario) { // Verifica si el usuario está autenticado
-        res.status(401).send('No autorizado'); // Respuesta de no autorizado si no hay sesión
-        return;
+    if (!req.session.usuario || req.session.tipo_usuario !== 'administrador') { // Verifica si el usuario está autenticado y es administrador        res.status(401).send('No autorizado'); // Respuesta de no autorizado si no hay sesión
+        return; // Redirige a la página de inicio de sesión
     }
     try {
         const [results, fields] = await connection.query(
@@ -22,9 +21,8 @@ const obtenerUsuarios = async (req, res) => { // Función para obtener la lista 
 }
 
 const eliminarUsuario = async (req, res) => { // Función para eliminar un usuario
-    if (!req.session.usuario) { // Verifica si el usuario está autenticado
-        res.status(401).send('No autorizado'); // Respuesta de no autorizado si no hay sesión
-        return;
+    if (!req.session.usuario || req.session.tipo_usuario !== 'administrador') { // Verifica si el usuario está autenticado y es administrador        res.status(401).send('No autorizado'); // Respuesta de no autorizado si no hay sesión
+        return; // Redirige a la página de inicio de sesión
     }
     const datos = req.query; // Obtiene los datos de la consulta (query parameters)
     try {
@@ -47,9 +45,8 @@ const eliminarUsuario = async (req, res) => { // Función para eliminar un usuar
 }
 
 const editarUsuario = async (req, res) => { // Función para editar un usuario
-    if (!req.session.usuario) { // Verifica si el usuario está autenticado
-        res.status(401).send('No autorizado'); // Respuesta de no autorizado si no hay sesión
-        return;
+    if (!req.session.usuario || req.session.tipo_usuario !== 'administrador') { // Verifica si el usuario está autenticado y es administrador        res.status(401).send('No autorizado'); // Respuesta de no autorizado si no hay sesión
+        return; // Redirige a la página de inicio de sesión
     }
     const { id, usuario, clave, nombre, email, cc, telefono } = req.body; // Obtiene los datos del cuerpo de la solicitud
 

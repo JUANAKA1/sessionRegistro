@@ -86,6 +86,7 @@ function Productos({ recargar }) {
 
   return (
     <>
+    <h1>Listado de Productos</h1>
       <table>
         <thead>
           <tr>

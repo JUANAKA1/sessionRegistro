@@ -1,10 +1,10 @@
 const connection = require("./conexion"); // Importa la conexión a la base de datos
 
 const registroProductos = async (req, res) => { // Función para manejar el registro de productos
-    // if (!req.session.usuario) { // Verifica si no hay una sesión activa
-    //     res.status(401).send('No autorizado'); // Respuesta de error de autorización
-    //     return; // Finaliza la ejecución de la función
-    // }
+    if (!req.session.usuario || req.session.tipo_usuario !== 'administrador') { // Verifica si el usuario está autenticado y es administrador        res.status(401).send('No autorizado'); // Respuesta de no autorizado si no hay sesión
+        res.status(401).send('No autorizado'); // Respuesta de error de autorización
+        return; // Finaliza la ejecución de la función
+    }
     // Obtiene los datos del producto del cuerpo de la solicitud
     const { nombre, descripcion, precio, talla, color, unidades, categoria } = req.body;
 
