@@ -10,6 +10,7 @@ const registro = require('./registro');
 const { eliminarUsuario, obtenerUsuarios, editarUsuario } = require('./usuarios');
 const validar = require('./validar');
 const registroProductos = require('./registroProductos')
+const { obtenerProductos, eliminarProducto, editarProducto } = require('./productos')
 const saltRounds = 10;
 
 app.use(express.json());
@@ -40,6 +41,12 @@ app.delete('/usuarios', eliminarUsuario)
 app.put('/usuarios', editarUsuario)
 
 app.post('/registroProductos', registroProductos)
+
+app.get('/productos', obtenerProductos)
+
+app.delete('/productos', eliminarProducto)
+
+app.put('/productos', editarProducto)
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })

@@ -1,87 +1,88 @@
 import { useEffect, useState } from 'react'; // Importación de hooks useEffect y useState de React
 import './App.css'; // Importación del archivo CSS para estilos
 
-function Usuarios({ recargar }) {
-  // Estado para almacenar la lista de usuarios
-  const [usuarios, setUsuarios] = useState([]);
-  
-  // Estado para almacenar los datos del usuario que se está editando
-  const [usuarioEdit, setUsuarioEdit] = useState({
+function Productos({ recargar }) {
+  // Estado para almacenar la lista de productos
+  const [productos, setProductos] = useState([]);
+
+  // Estado para almacenar los datos del producto que se está editando
+  const [productoEdit, setProductoEdit] = useState({
     id: '',
-    usuario: '',
-    clave: '',
     nombre: '',
-    email: '',
-    cc: '', // Cédula
-    telefono: ''
+    descripcion: '',
+    precio: '',
+    talla: '',
+    color: '',
+    unidades: '',
+    categoria: ''
   });
-  
-  // Función para obtener la lista de usuarios desde la API
-  async function obtenerUsuarios() {
-    const peticion = await fetch('http://localhost:3000/usuarios', { credentials: 'include' });
-    
+
+  // Función para obtener la lista de productos desde la API
+  async function obtenerProductos() {
+    const peticion = await fetch('http://localhost:3000/productos', { credentials: 'include' });
+
     // Si la respuesta es exitosa
     if (peticion.ok) {
       const respuesta = await peticion.json(); // Convierte la respuesta a formato JSON
-      setUsuarios(respuesta); // Actualiza el estado de usuarios con los datos recibidos
+      setProductos(respuesta); // Actualiza el estado de productos con los datos recibidos
     }
   }
 
-  // Función para eliminar un usuario
-  async function eliminarUsuario(id) {
+  // Función para eliminar un producto
+  async function eliminarProducto(id) {
     // Confirma si el usuario realmente quiere eliminarlo
-    if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
-      const peticion = await fetch(`http://localhost:3000/usuarios?id=${id}`, { 
-        credentials: 'include', 
+    if (window.confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+      const peticion = await fetch(`http://localhost:3000/productos?id=${id}`, {
+        credentials: 'include',
         method: 'DELETE' // Método para eliminar
       });
-      
+
       // Si la respuesta es exitosa
       if (peticion.ok) {
-        alert("Usuario eliminado"); // Mensaje de confirmación
-        obtenerUsuarios(); // Vuelve a cargar la lista de usuarios
+        alert("Producto eliminado"); // Mensaje de confirmación
+        obtenerProductos(); // Vuelve a cargar la lista de productos
       }
     }
   }
 
-  // Función para editar un usuario
-  async function editarUsuario(id) {
-    // Desestructura los valores del usuario que se va a editar
-    const { usuario, clave, nombre, email, cc, telefono } = usuarioEdit;
-    
+  // Función para editar un producto
+  async function editarProducto(id) {
+    // Desestructura los valores del producto que se va a editar
+    const { nombre, descripcion, precio, talla, color, unidades, categoria } = productoEdit;
+
     // Valida que todos los campos estén completos
-    if (!usuario || !clave || !nombre || !email || !cc || !telefono) {
+    if (!nombre || !descripcion || !precio || !talla || !color || !unidades || !categoria) {
       alert("Por favor, complete todos los campos"); // Mensaje de error
       return; // Sale de la función si faltan campos
     }
 
-    const peticion = await fetch(`http://localhost:3000/usuarios?id=${id}`, {
+    const peticion = await fetch(`http://localhost:3000/productos?id=${id}`, {
       method: 'PUT', // Método para actualizar
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, usuario, clave, nombre, email, cc, telefono }), // Envía los datos como JSON
+      body: JSON.stringify({ id, nombre, descripcion, precio, talla, color, unidades, categoria }), // Envía los datos como JSON
       credentials: 'include'
     });
-    
+
     // Si la respuesta es exitosa
     if (peticion.ok) {
-      alert("Usuario actualizado"); // Mensaje de confirmación
-      obtenerUsuarios(); // Vuelve a cargar la lista de usuarios
-      // Reinicia el estado del usuario que se está editando
-      setUsuarioEdit({ id: '', usuario: '', clave: '', nombre: '', email: '', cc: '', telefono: '' });
+      alert("Producto actualizado"); // Mensaje de confirmación
+      obtenerProductos(); // Vuelve a cargar la lista de productos
+      // Reinicia el estado del producto que se está editando
+      setProductoEdit({ id: '', nombre: '', descripcion: '', precio: '', talla: '', color: '', unidades: '', categoria: '' });
     } else {
-      alert("No se pudo actualizar el usuario"); // Mensaje de error
+      alert("No se pudo actualizar el producto"); // Mensaje de error
     }
   }
 
   // Función para manejar el clic en el botón de editar
-  function handleEditClick(usuario) {
-    setUsuarioEdit(usuario); // Establece el usuario seleccionado en el estado de edición
+  function handleEditClick(producto) {
+    setProductoEdit(producto); // Establece el producto seleccionado en el estado de edición
   }
 
-  // Hook useEffect para cargar la lista de usuarios cuando el componente se monta o se recarga
+  // Hook useEffect para cargar la lista de productos cuando el componente se monta o se recarga
   useEffect(() => {
-    obtenerUsuarios(); // Llama a la función para obtener usuarios
-  }, [recargar]); // Dependencia de recargar, para volver a obtener usuarios cuando cambie
+    obtenerProductos(); // Llama a la función para obtener productos
+  }, [recargar]); // Dependencia de recargar, para volver a obtener productos cuando cambie
 
   return (
     <>
@@ -89,86 +90,95 @@ function Usuarios({ recargar }) {
         <thead>
           <tr>
             <th>Id</th>
-            <th>Usuario</th>
-            <th>Clave</th>
             <th>Nombre</th>
-            <th>Email</th>
-            <th>Cédula</th>
-            <th>Teléfono</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Talla</th>
+            <th>Color</th>
+            <th>Unidades</th>
+            <th>Categoría</th>
             <th>Opciones</th>
           </tr>
         </thead>
         <tbody>
-          {usuarios.map(usuario => (
-            <tr key={usuario.id}>
-              <td>{usuario.id}</td>
-              <td>{usuario.usuario}</td>
-              <td>{usuario.clave}</td>
-              <td>{usuario.nombre}</td>
-              <td>{usuario.email}</td>
-              <td>{usuario.cc}</td>
-              <td>{usuario.telefono}</td>
+          {productos.map(producto => (
+            <tr key={producto.id}>
+              <td>{producto.id}</td>
+              <td>{producto.nombre}</td>
+              <td>{producto.descripcion}</td>
+              <td>{producto.precio}</td>
+              <td>{producto.talla}</td>
+              <td>{producto.color}</td>
+              <td>{producto.unidades}</td>
+              <td>{producto.categoria}</td>
               <td>
-                <button onClick={() => eliminarUsuario(usuario.id)}>Eliminar</button> {/* Botón para eliminar */}
-                <button onClick={() => handleEditClick(usuario)}>Editar</button> {/* Botón para editar */}
+                <button onClick={() => eliminarProducto(producto.id)}>Eliminar</button> {/* Botón para eliminar */}
+                <button onClick={() => handleEditClick(producto)}>Editar</button> {/* Botón para editar */}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* Formulario de edición, se muestra solo si hay un usuario seleccionado para editar */}
-      {usuarioEdit.id && (
-        <form onSubmit={(e) => { e.preventDefault(); editarUsuario(usuarioEdit.id); }}>
-          <h2>Editar Usuario</h2>
+      {/* Formulario de edición, se muestra solo si hay un producto seleccionado para editar */}
+      {productoEdit.id && (
+        <form onSubmit={(e) => { e.preventDefault(); editarProducto(productoEdit.id); }}>
+          <h2>Editar Producto</h2>
           <input
             type="text"
-            value={usuarioEdit.usuario}
-            onChange={(e) => setUsuarioEdit({ ...usuarioEdit, usuario: e.target.value })}
-            placeholder="Nuevo nombre de usuario"
-            required
-          />
-          <input
-            type="password"
-            value={usuarioEdit.clave}
-            onChange={(e) => setUsuarioEdit({ ...usuarioEdit, clave: e.target.value })}
-            placeholder="Nueva clave"
-            required
-          />
-          <input
-            type="text"
-            value={usuarioEdit.nombre}
-            onChange={(e) => setUsuarioEdit({ ...usuarioEdit, nombre: e.target.value })}
+            value={productoEdit.nombre}
+            onChange={(e) => setProductoEdit({ ...productoEdit, nombre: e.target.value })}
             placeholder="Nombre"
             required
           />
           <input
-            type="email"
-            value={usuarioEdit.email}
-            onChange={(e) => setUsuarioEdit({ ...usuarioEdit, email: e.target.value })}
-            placeholder="Email"
+            type="text"
+            value={productoEdit.descripcion}
+            onChange={(e) => setProductoEdit({ ...productoEdit, descripcion: e.target.value })}
+            placeholder="Descripción"
+            required
+          />
+          <input
+            type="number"
+            value={productoEdit.precio}
+            onChange={(e) => setProductoEdit({ ...productoEdit, precio: e.target.value })}
+            placeholder="Precio"
             required
           />
           <input
             type="text"
-            value={usuarioEdit.cc}
-            onChange={(e) => setUsuarioEdit({ ...usuarioEdit, cc: e.target.value })}
-            placeholder="Cédula"
+            value={productoEdit.talla}
+            onChange={(e) => setProductoEdit({ ...productoEdit, talla: e.target.value })}
+            placeholder="Talla"
             required
           />
           <input
             type="text"
-            value={usuarioEdit.telefono}
-            onChange={(e) => setUsuarioEdit({ ...usuarioEdit, telefono: e.target.value })}
-            placeholder="Teléfono"
+            value={productoEdit.color}
+            onChange={(e) => setProductoEdit({ ...productoEdit, color: e.target.value })}
+            placeholder="Color"
+            required
+          />
+          <input
+            type="number"
+            value={productoEdit.unidades}
+            onChange={(e) => setProductoEdit({ ...productoEdit, unidades: e.target.value })}
+            placeholder="Unidades"
+            required
+          />
+          <input
+            type="text"
+            value={productoEdit.categoria}
+            onChange={(e) => setProductoEdit({ ...productoEdit, categoria: e.target.value })}
+            placeholder="Categoría"
             required
           />
           <button type="submit">Guardar cambios</button> {/* Botón para guardar cambios */}
-          <button type="button" onClick={() => setUsuarioEdit({ id: '', usuario: '', clave: '', nombre: '', email: '', cc: '', telefono: '' })}>Cancelar</button> {/* Botón para cancelar */}
+          <button type="button" onClick={() => setProductoEdit({ id: '', nombre: '', descripcion: '', precio: '', talla: '', color: '', unidades: '', categoria: '' })}>Cancelar</button> {/* Botón para cancelar */}
         </form>
       )}
     </>
   );
 }
 
-export default Usuarios; // Exporta el componente Usuarios para usarlo en otras partes de la aplicación
+export default Productos; // Exporta el componente Productos para usarlo en otras partes de la aplicación
