@@ -1,7 +1,7 @@
 const connection = require("./conexion");
 
 const obtenerProductos = async (req, res) => { // Función para obtener la lista de productos
-    if (!req.session.usuario || req.session.tipo_usuario !== 'administrador') { // Verifica si el usuario está autenticado y es administrador       
+    if (req.session.usuario || req.session.tipo_usuario == 'administrador') { // Verifica si el usuario está autenticado y es administrador       
         return;
     }
     try {

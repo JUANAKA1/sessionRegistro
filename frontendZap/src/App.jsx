@@ -7,6 +7,7 @@ import Registro from './Registro'; // Importación del componente Registro
 import RegistroProductos from './RegistroProductos'; // Importación del componente RegistroProductos
 import Productos from './Productos'; // Importación del componente Productos
 import Navbar from './navbar'; // Asegúrate de que el nombre sea correcto
+import ProductosVenta from './ProductosVenta';
 
 function App() {
   // Declaración de estados con useState
@@ -75,10 +76,12 @@ function App() {
                                 <Route path="/usuarios" element={<Usuarios recargar={recargar} />} />
                                 <Route path="/registro" element={<Registro recargarAhora={recargarAhora} />} />
                                 <Route path="/registroProductos" element={<RegistroProductos recargarAhora={recargarAhora} />} />
+                                <Route path="/productos" element={<Productos recargar={recargar} />} />
+                                <Route path="/productosVenta" element={<ProductosVenta recargar={recargar} />} /> 
                             </>
                         )}
 
-                        <Route path="/productos" element={<Productos recargar={recargar} />} />
+                        <Route path="/productosVenta" element={<ProductosVenta recargar={recargar} />} /> 
                         <Route path="*" element={<Navigate to="/conversor" />} />
                     </Routes>
                 </>
