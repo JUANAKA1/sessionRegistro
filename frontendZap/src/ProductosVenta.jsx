@@ -1,17 +1,7 @@
 import { useEffect, useState } from 'react';
 
-function ProductosVenta({ recargar }) {
+function ProductosVenta({ recargar, agregarAlCarrito }) {
   const [productos, setProductos] = useState([]);
-  const [productoEdit, setProductoEdit] = useState({
-    id: '',
-    nombre: '',
-    descripcion: '',
-    precio: '',
-    talla: '',
-    color: '',
-    unidades: '',
-    categoria: ''
-  });
 
   async function obtenerProductos() {
     try {
@@ -37,13 +27,16 @@ function ProductosVenta({ recargar }) {
       <div className="producto-lista">
         {productos.map(producto => (
           <div key={producto.id} className="producto-card">
-            <img src={producto.imagen} alt={producto.nombre} />
+            {/* Imagen del producto */}
+            <img src={producto.imagen} alt={producto.nombre} style={{ width: '100%', height: 'auto' }} />
             <h3>{producto.nombre}</h3>
             <p>{producto.descripcion}</p>
             <p>Precio: ${producto.precio}</p>
             <p>Talla: {producto.talla}</p>
             <p>Color: {producto.color}</p>
             <p>Unidades disponibles: {producto.unidades}</p>
+            {/* Botón de Agregar al Carrito */}
+            <button onClick={() => agregarAlCarrito(producto)}>Agregar al Carrito</button>
           </div>
         ))}
       </div>
