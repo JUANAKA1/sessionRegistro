@@ -17,7 +17,6 @@ function Navbar({ tipoUsuario }) { // Acepta tipoUsuario como prop
               <li>
                 <Link to="/productos">Productos</Link>
                 <Link to="/registroProductos">Registrar Productos</Link>
-                <Link to="/productosVenta">Zapateria JM</Link>
               </li>
             </>
           )}

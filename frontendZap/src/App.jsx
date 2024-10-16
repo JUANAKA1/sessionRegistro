@@ -8,6 +8,7 @@ import RegistroProductos from './RegistroProductos'; // Importación del compone
 import Productos from './Productos'; // Importación del componente Productos
 import Navbar from './navbar'; // Asegúrate de que el nombre sea correcto
 import ProductosVenta from './ProductosVenta';
+import Footer from './Footer';
 
 function App() {
   // Declaración de estados con useState
@@ -77,19 +78,19 @@ function App() {
                                 <Route path="/registro" element={<Registro recargarAhora={recargarAhora} />} />
                                 <Route path="/registroProductos" element={<RegistroProductos recargarAhora={recargarAhora} />} />
                                 <Route path="/productos" element={<Productos recargar={recargar} />} />
-                                <Route path="/productosVenta" element={<ProductosVenta recargar={recargar} />} /> 
                             </>
                         )}
 
                         <Route path="/productosVenta" element={<ProductosVenta recargar={recargar} />} /> 
-                        <Route path="*" element={<Navigate to="/conversor" />} />
+                        <Route path="*" element={<Navigate to="/productosVenta" />} />
                     </Routes>
+                    <Footer />
                 </>
             ) : (
                 <div>
                     <h1>Inicio de sesión</h1>
-                    <input placeholder='Usuario' id='usuario' type="text" value={usuario} onChange={cambiarUsuario} />
-                    <input placeholder='Clave' id='clave' type="password" value={clave} onChange={cambiarClave} />
+                    <input placeholder='Usuario' id='usuario' type="text" value={usuario} onChange={cambiarUsuario} required/>
+                    <input placeholder='Clave' id='clave' type="password" value={clave} onChange={cambiarClave} required/>
                     <button type="submit" onClick={ingresar}>Ingresar</button>
                     
                     <button onClick={toggleRegistro}>

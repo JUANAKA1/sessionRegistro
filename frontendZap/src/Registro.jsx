@@ -63,42 +63,42 @@ function Registro({ recargarAhora }) {
         type="text" 
         value={usuarioRegistro} 
         onChange={cambiarUsuarioRegistro} 
-      />
+        required/>
       <input 
         placeholder='Clave' 
         id='clave' 
         type="password" 
         value={claveRegistro} 
         onChange={cambiarClaveRegistro} 
-      />
+        required/>
       <input 
         placeholder='Nombre' 
         id='nombre' 
         type="text" 
         value={nombreRegistro} 
         onChange={cambiarNombreRegistro} 
-      />
+        required/>
       <input 
         placeholder='Email' 
         id='email' 
         type="email" 
         value={emailRegistro} 
         onChange={cambiarEmailRegistro} 
-      />
+        required/>
       <input 
         placeholder='Cédula' 
         id='cc' 
         type="text" 
         value={ccRegistro} 
         onChange={cambiarCcRegistro} 
-      />
+      required/>
       <input 
         placeholder='Teléfono' 
         id='telefono' 
         type="text" 
         value={telefonoRegistro} 
         onChange={cambiarTelefonoRegistro} 
-      />
+      required/>
       <button type="submit" onClick={registrar}>Registrar</button> {/* Botón para registrar */}
     </>
   );

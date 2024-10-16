@@ -14,7 +14,8 @@ function Productos({ recargar }) {
     talla: '',
     color: '',
     unidades: '',
-    categoria: ''
+    categoria: '',
+    imagen: null // Estado para la imagen
   });
 
   // Función para obtener la lista de productos desde la API
@@ -48,7 +49,7 @@ function Productos({ recargar }) {
   // Función para editar un producto
   async function editarProducto(id) {
     // Desestructura los valores del producto que se va a editar
-    const { nombre, descripcion, precio, talla, color, unidades, categoria } = productoEdit;
+    const { nombre, descripcion, precio, talla, color, unidades, categoria, imagen } = productoEdit;
 
     // Valida que todos los campos estén completos
     if (!nombre || !descripcion || !precio || !talla || !color || !unidades || !categoria) {
@@ -56,10 +57,22 @@ function Productos({ recargar }) {
       return; // Sale de la función si faltan campos
     }
 
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('nombre', nombre);
+    formData.append('descripcion', descripcion);
+    formData.append('precio', precio);
+    formData.append('talla', talla);
+    formData.append('color', color);
+    formData.append('unidades', unidades);
+    formData.append('categoria', categoria);
+    if (imagen) {
+      formData.append('imagen', imagen); // Añade la imagen al FormData
+    }
+
     const peticion = await fetch(`http://localhost:3000/productos?id=${id}`, {
       method: 'PUT', // Método para actualizar
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, nombre, descripcion, precio, talla, color, unidades, categoria }), // Envía los datos como JSON
+      body: formData, // Envía los datos como FormData
       credentials: 'include'
     });
 
@@ -68,7 +81,7 @@ function Productos({ recargar }) {
       alert("Producto actualizado"); // Mensaje de confirmación
       obtenerProductos(); // Vuelve a cargar la lista de productos
       // Reinicia el estado del producto que se está editando
-      setProductoEdit({ id: '', nombre: '', descripcion: '', precio: '', talla: '', color: '', unidades: '', categoria: '' });
+      setProductoEdit({ id: '', nombre: '', descripcion: '', precio: '', talla: '', color: '', unidades: '', categoria: '', imagen: null });
     } else {
       alert("No se pudo actualizar el producto"); // Mensaje de error
     }
@@ -86,7 +99,7 @@ function Productos({ recargar }) {
 
   return (
     <>
-    <h1>Listado de Productos</h1>
+      <h1>Listado de Productos</h1>
       <table>
         <thead>
           <tr>
@@ -98,6 +111,7 @@ function Productos({ recargar }) {
             <th>Color</th>
             <th>Unidades</th>
             <th>Categoría</th>
+            <th>Imagen</th> {/* Columna para la imagen */}
             <th>Opciones</th>
           </tr>
         </thead>
@@ -112,6 +126,11 @@ function Productos({ recargar }) {
               <td>{producto.color}</td>
               <td>{producto.unidades}</td>
               <td>{producto.categoria}</td>
+              <td>
+                {producto.imagen && (
+                  <img src={`http://localhost:3000/${producto.imagen}`} alt={producto.nombre} style={{ width: '100px' }} />
+                )}
+              </td>
               <td>
                 <button onClick={() => eliminarProducto(producto.id)}>Eliminar</button> {/* Botón para eliminar */}
                 <button onClick={() => handleEditClick(producto)}>Editar</button> {/* Botón para editar */}
@@ -174,8 +193,13 @@ function Productos({ recargar }) {
             placeholder="Categoría"
             required
           />
+          <input
+            type="file" // Campo para cargar la imagen
+            onChange={(e) => setProductoEdit({ ...productoEdit, imagen: e.target.files[0] })}
+            accept="image/*" // Aceptar solo imágenes
+          />
           <button type="submit">Guardar cambios</button> {/* Botón para guardar cambios */}
-          <button type="button" onClick={() => setProductoEdit({ id: '', nombre: '', descripcion: '', precio: '', talla: '', color: '', unidades: '', categoria: '' })}>Cancelar</button> {/* Botón para cancelar */}
+          <button type="button" onClick={() => setProductoEdit({ id: '', nombre: '', descripcion: '', precio: '', talla: '', color: '', unidades: '', categoria: '', imagen: null })}>Cancelar</button> {/* Botón para cancelar */}
         </form>
       )}
     </>

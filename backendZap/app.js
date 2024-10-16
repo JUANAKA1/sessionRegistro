@@ -3,7 +3,6 @@ const app = express()
 const port = 3000
 const cors = require('cors')
 const session = require('express-session')
-const md5 = require('md5')
 const bcrypt = require('bcrypt');
 const login = require('./login');
 const registro = require('./registro');
