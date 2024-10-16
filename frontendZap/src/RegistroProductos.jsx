@@ -1,5 +1,5 @@
-import { useState } from 'react'; // Importación de hooks de React
-import './App.css'; // Importación del archivo CSS para estilos
+import { useState } from 'react';
+import './App.css';
 
 function RegistroProductos({ recargarAhora }) {
   // Estados para almacenar los datos de registro del producto
@@ -10,6 +10,7 @@ function RegistroProductos({ recargarAhora }) {
   const [colorRegistro, setColorRegistro] = useState('');
   const [unidadesRegistro, setUnidadesRegistro] = useState('');
   const [categoriaRegistro, setCategoriaRegistro] = useState('');
+  const [imagenRegistro, setImagenRegistro] = useState(null); // Nuevo estado para la imagen
   const [error, setError] = useState(null); // Estado para manejar errores
 
   // Funciones para manejar cambios en los inputs
@@ -41,52 +42,66 @@ function RegistroProductos({ recargarAhora }) {
     setCategoriaRegistro(evento.target.value);
   }
 
+  // Función para manejar el cambio en el input de la imagen
+  function cambiarImagenRegistro(evento) {
+    setImagenRegistro(evento.target.files[0]); // Guardar el archivo seleccionado
+  }
+
   // Función para registrar un nuevo producto
   async function registrar() {
     // Validación de campos
-    if (!nombreRegistro || !descripcionRegistro || !precioRegistro || !tallaRegistro || !colorRegistro || !unidadesRegistro || !categoriaRegistro) {
-      setError("Todos los campos son obligatorios");
+    if (!nombreRegistro || !descripcionRegistro || !precioRegistro || !tallaRegistro || !colorRegistro || !unidadesRegistro || !categoriaRegistro || !imagenRegistro) {
+      setError("Todos los campos, incluyendo la imagen, son obligatorios");
       return;
     }
     
     setError(null); // Reiniciar el estado de error
 
+    // Crear un objeto FormData para enviar los datos y la imagen
+    const formData = new FormData();
+    formData.append('nombre', nombreRegistro);
+    formData.append('descripcion', descripcionRegistro);
+    formData.append('precio', precioRegistro);
+    formData.append('talla', tallaRegistro);
+    formData.append('color', colorRegistro);
+    formData.append('unidades', unidadesRegistro);
+    formData.append('categoria', categoriaRegistro);
+    formData.append('imagen', imagenRegistro); // Agregar la imagen al FormData
+
     try {
       const peticion = await fetch('http://localhost:3000/registroProductos', {
-        method: 'POST', // Cambiado a POST
-        headers: {
-          'Content-Type': 'application/json', // Especificar el tipo de contenido
-        },
+        method: 'POST',
+        body: formData, // Enviar el FormData
         credentials: 'include', // Incluye las credenciales para la sesión
-        body: JSON.stringify({
-          nombre: nombreRegistro,
-          descripcion: descripcionRegistro,
-          precio: precioRegistro,
-          talla: tallaRegistro,
-          color: colorRegistro,
-          unidades: unidadesRegistro,
-          categoria: categoriaRegistro,
-        }),
       });
 
       // Si la respuesta es exitosa
       if (peticion.ok) {
-        alert("Producto registrado"); // Mensaje de confirmación
+        alert("Producto registrado");
         recargarAhora(); // Llama a la función para recargar el estado o la lista de productos
+        // Limpiar los campos después del registro
+        setNombreRegistro('');
+        setDescripcionRegistro('');
+        setPrecioRegistro('');
+        setTallaRegistro('');
+        setColorRegistro('');
+        setUnidadesRegistro('');
+        setCategoriaRegistro('');
+        setImagenRegistro(null);
       } else {
-        const mensajeError = await peticion.text(); // Obtiene el mensaje de error del servidor
-        setError(mensajeError || 'Producto no registrado'); // Mensaje de error
+        const mensajeError = await peticion.text();
+        setError(mensajeError || 'Producto no registrado');
       }
     } catch (err) {
-      console.error(err); // Muestra el error en la consola
-      setError('Error al registrar el producto'); // Mensaje de error
+      console.error(err);
+      setError('Error al registrar el producto');
     }
   }
 
   return (
     <>
       <h1>Registro de Producto</h1>
-      {error && <p className="error">{error}</p>} {/* Mostrar mensaje de error */}
+      {error && <p className="error">{error}</p>}
       <input 
         placeholder='Nombre del Producto' 
         id='nombre' 
@@ -136,9 +151,14 @@ function RegistroProductos({ recargarAhora }) {
         value={categoriaRegistro} 
         onChange={cambiarCategoriaRegistro} 
       />
-      <button type="button" onClick={registrar}>Registrar Producto</button> {/* Botón para registrar */}
+      <input 
+        id='imagen' 
+        type="file" 
+        onChange={cambiarImagenRegistro} 
+      /> {/* Nuevo campo para la imagen */}
+      <button type="button" onClick={registrar}>Registrar Producto</button>
     </>
   );
 }
 
-export default RegistroProductos; // Exporta el componente RegistroProductos para usarlo en otras partes de la aplicación
+export default RegistroProductos;

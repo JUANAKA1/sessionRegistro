@@ -49,6 +49,9 @@ app.delete('/productos', eliminarProducto)
 app.put('/productos', editarProducto)
 
 app.get('/productos', obtenerProductos)
+
+app.use('/uploads', express.static('uploads'));
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
