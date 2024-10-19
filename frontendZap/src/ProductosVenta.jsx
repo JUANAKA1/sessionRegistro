@@ -28,7 +28,7 @@ function ProductosVenta({ recargar, agregarAlCarrito }) {
         {productos.map(producto => (
           <div key={producto.id} className="producto-card">
             {/* Imagen del producto */}
-            <img src={`http://localhost:3000/${producto.imagen}`} alt={producto.nombre} style={{ width: '100%', height: 'auto' }} />
+            <img src={`http://localhost:3000/${producto.imagen}`} alt={producto.nombre} style={{ width: '400px', height: '400px' }} />
             <h3>{producto.nombre}</h3>
             <p>{producto.descripcion}</p>
             <p>Precio: ${producto.precio}</p>
