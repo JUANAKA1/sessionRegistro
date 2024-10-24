@@ -1,6 +1,7 @@
+
 import { useEffect, useState } from 'react';
 
-function ProductosVenta({ recargar, agregarAlCarrito }) {
+function ProductosVenta({ agregarAlCarrito }) {
   const [productos, setProductos] = useState([]);
 
   async function obtenerProductos() {
@@ -19,7 +20,7 @@ function ProductosVenta({ recargar, agregarAlCarrito }) {
 
   useEffect(() => {
     obtenerProductos();
-  }, [recargar]);
+  }, []);
 
   return (
     <div className="productos">
@@ -36,7 +37,7 @@ function ProductosVenta({ recargar, agregarAlCarrito }) {
             <p>Color: {producto.color}</p>
             <p>Unidades disponibles: {producto.unidades}</p>
             {/* Botón de Agregar al Carrito */}
-            <button onClick={() => agregarAlCarrito(producto)}>Agregar al Carrito</button>
+            <button onClick={() => agregarAlCarrito(producto)}>Agregar al Carrito</button> <br /> <br />
           </div>
         ))}
       </div>

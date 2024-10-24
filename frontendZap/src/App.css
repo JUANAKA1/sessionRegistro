@@ -40,3 +40,23 @@
 .read-the-docs {
   color: #888;
 }
+.contenedor {
+  display: flex; /* Utiliza flexbox para la alineación */
+  justify-content: space-between; /* Espacio entre los elementos */
+  align-items: flex-start; /* Alinear los elementos en la parte superior */
+}
+
+.productos-venta {
+  flex: 2; /* Ocupa más espacio que el carrito */
+  margin-right: 20px; /* Espacio entre la sección de productos y el carrito */
+}
+
+.carrito {
+  flex: 1; /* Menos espacio para el carrito */
+  border: 1px solid #0b0a0a; /* Borde para el carrito */
+  padding: 10px; /* Espaciado interno */
+  background-color: #2e2b2b; /* Color de fondo */
+  max-height: 400px; /* Altura máxima para que no ocupe demasiado espacio */
+  overflow-y: auto; /* Habilita el scroll si hay muchos productos */
+}
+
