@@ -10,7 +10,7 @@ const { eliminarUsuario, obtenerUsuarios, editarUsuario } = require('./usuarios'
 const validar = require('./validar');
 const registroProductos = require('./registroProductos')
 const { obtenerProductos, eliminarProducto, editarProducto } = require('./productos')
-const { agregarAlCarrito, obtenerCarrito } = require('./carrito')
+const { agregarAlCarrito, obtenerCarrito, editarCarrito, eliminarDelCarrito } = require('./carrito')
 const saltRounds = 10;
 
 app.use(express.json());
@@ -48,8 +48,10 @@ app.delete('/productos', eliminarProducto)
 
 app.put('/productos', editarProducto)
 
-app.post('/carrito', agregarAlCarrito);
+app.post('/carrito/agregar', agregarAlCarrito);
 app.get('/carrito', obtenerCarrito);
+app.put('/carrito/editar', editarCarrito);
+app.delete('/carrito/eliminar', eliminarDelCarrito);
 
 app.use('/uploads', express.static('uploads'));
 
