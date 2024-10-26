@@ -33,19 +33,13 @@ app.get('/login', login)
 app.get('/validar', validar )
 
 app.get('/registro', registro)
-
 app.get('/usuarios', obtenerUsuarios)
-
 app.delete('/usuarios', eliminarUsuario)
-
 app.put('/usuarios', editarUsuario)
 
 app.post('/registroProductos', registroProductos)
-
 app.get('/productos', obtenerProductos)
-
 app.delete('/productos', eliminarProducto)
-
 app.put('/productos', editarProducto)
 
 app.post('/carrito/agregar', agregarAlCarrito);
