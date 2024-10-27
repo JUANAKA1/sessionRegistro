@@ -4,10 +4,8 @@ function ProductosVenta() {
   const [productos, setProductos] = useState([]);
   const [carrito, setCarrito] = useState([]);
   const [recargar, setRecargar] = useState(false);
-  const [cantidades, setCantidades] = useState({});
-  const [mensaje, setMensaje] = useState('');
 
-  // Función para obtener los productos
+  // Función para obtener los productos disponibles
   async function obtenerProductos() {
     try {
       const response = await fetch('http://localhost:3000/productos', { credentials: 'include' });
@@ -22,18 +20,13 @@ function ProductosVenta() {
     }
   }
 
-  // Función para obtener el carrito
+  // Función para obtener los productos en el carrito
   async function obtenerCarrito() {
     try {
       const response = await fetch('http://localhost:3000/carrito', { credentials: 'include' });
       if (response.ok) {
         const data = await response.json();
         setCarrito(data);
-        const cantidadesIniciales = data.reduce((acc, item) => {
-          acc[item.producto_id] = item.cantidad;
-          return acc;
-        }, {});
-        setCantidades(cantidadesIniciales);
       } else {
         console.error("Error al obtener el carrito:", response.statusText);
       }
@@ -44,19 +37,16 @@ function ProductosVenta() {
 
   // Función para agregar un producto al carrito
   async function agregarAlCarrito(producto) {
-    const productoEnCarrito = carrito.find(item => item.producto_id === producto.id);
-    const nuevaCantidad = productoEnCarrito ? productoEnCarrito.cantidad + 1 : 1;
-
     try {
       const response = await fetch('http://localhost:3000/carrito/agregar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ producto_id: producto.id, cantidad: nuevaCantidad })
+        body: JSON.stringify({ producto_id: producto.id, cantidad: 1 })
       });
 
       if (response.ok) {
-        setRecargar(!recargar);
+        setRecargar(!recargar); // Recargar el carrito
       } else {
         console.error("Error al agregar al carrito:", response.statusText);
       }
@@ -76,7 +66,7 @@ function ProductosVenta() {
       });
 
       if (response.ok) {
-        setRecargar(!recargar);
+        setRecargar(!recargar); // Recargar el carrito
       } else {
         console.error("Error al eliminar del carrito:", response.statusText);
       }
@@ -87,69 +77,25 @@ function ProductosVenta() {
 
   // Función para actualizar la cantidad de un producto en el carrito
   async function actualizarCantidad(producto_id, nuevaCantidad) {
-    if (nuevaCantidad <= 0) {
-      alert('La cantidad debe ser mayor que cero.');
-      return;
-    }
-
     try {
       const response = await fetch('http://localhost:3000/carrito/editar', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ producto_id, cantidad: Number(nuevaCantidad) })
+        body: JSON.stringify({ producto_id, cantidad: nuevaCantidad })
       });
 
       if (response.ok) {
-        setRecargar(!recargar);
-        setMensaje("Cantidad actualizada exitosamente");
+        setRecargar(!recargar); // Recargar el carrito
       } else {
         console.error("Error al actualizar el carrito:", response.statusText);
-        const errorData = await response.json();
-        alert(errorData.error);
       }
     } catch (error) {
       console.error("Error al actualizar el carrito:", error);
     }
   }
 
-  // Función para proceder al pago
-  async function procederAlPago() {
-    try {
-      const response = await fetch('http://localhost:3000/carrito/pago', {
-        method: 'POST',
-        credentials: 'include'
-      });
-
-      if (response.ok) {
-        setRecargar(!recargar);
-        setMensaje("Pago procesado exitosamente");
-      } else {
-        console.error("Error al procesar el pago:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error al procesar el pago:", error);
-    }
-  }
-
-  // Manejar el cambio en la cantidad
-  const handleCantidadChange = (producto_id, nuevaCantidad) => {
-    setCantidades(prev => ({
-      ...prev,
-      [producto_id]: nuevaCantidad
-    }));
-  };
-
-  const handleCantidadBlur = (producto_id) => {
-    const nuevaCantidad = Number(cantidades[producto_id]);
-    if (nuevaCantidad > 0) {
-      actualizarCantidad(producto_id, nuevaCantidad);
-    } else {
-      alert('La cantidad debe ser mayor que cero.');
-    }
-  };
-
-  // Efecto para cargar productos y carrito
+  // Cargar productos y carrito cuando el componente se monta o el estado "recargar" cambia
   useEffect(() => {
     obtenerProductos();
     obtenerCarrito();
@@ -158,22 +104,24 @@ function ProductosVenta() {
   return (
     <div>
       <div className="productos">
-        <h2>Productos Disponibles</h2>
-        <div className="producto-lista">
-          {productos.map(producto => (
-            <div key={producto.id} className="producto-card">
-              <img src={`http://localhost:3000/${producto.imagen}`} alt={producto.nombre} style={{ width: '400px', height: '400px' }} />
-              <h3>{producto.nombre}</h3>
-              <p>{producto.descripcion}</p>
-              <p>Precio: ${producto.precio}</p>
-              <p>Talla: {producto.talla}</p>
-              <p>Color: {producto.color}</p>
-              <p>Unidades disponibles: {producto.unidades}</p>
-              <button onClick={() => agregarAlCarrito(producto)}>Agregar al Carrito</button>
-            </div>
-          ))}
-        </div>
+      <h2>Productos Disponibles</h2>
+      <div className="producto-lista">
+        {productos.map(producto => (
+          <div key={producto.id} className="producto-card">
+            {/* Imagen del producto */}
+            <img src={`http://localhost:3000/${producto.imagen}`} alt={producto.nombre} style={{ width: '400px', height: '400px' }} />
+            <h3>{producto.nombre}</h3>
+            <p>{producto.descripcion}</p>
+            <p>Precio: ${producto.precio}</p>
+            <p>Talla: {producto.talla}</p>
+            <p>Color: {producto.color}</p>
+            <p>Unidades disponibles: {producto.unidades}</p>
+            {/* Botón de Agregar al Carrito */}
+            <button onClick={() => agregarAlCarrito(producto)}>Agregar al Carrito</button>
+          </div>
+        ))}
       </div>
+    </div>
 
       <h2>Carrito de Compras</h2>
       <div>
@@ -184,18 +132,14 @@ function ProductosVenta() {
             <p>Cantidad: 
               <input
                 type="number"
-                value={cantidades[item.producto_id] || item.cantidad}
-                onChange={(e) => handleCantidadChange(item.producto_id, e.target.value)}
-                onBlur={() => handleCantidadBlur(item.producto_id)}
+                value={item.cantidad}
+                onChange={(e) => actualizarCantidad(item.producto_id, e.target.value)}
               />
             </p>
             <button onClick={() => eliminarDelCarrito(item.producto_id)}>Eliminar</button>
           </div>
         ))}
       </div>
-
-      <button onClick={procederAlPago}>Proceder al Pago</button>
-      {mensaje && <p>{mensaje}</p>} {/* Mensaje de confirmación */}
     </div>
   );
 }
