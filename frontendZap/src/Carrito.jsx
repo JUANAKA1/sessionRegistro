@@ -1,41 +1,56 @@
-import React, { useState } from 'react';
-import ProductosVenta from './ProductosVenta';
-import './App.css';
-function Carrito() {
-  const [carrito, setCarrito] = useState([]);
+// Carrito.js
+import React, { useState, useEffect } from 'react';
+import './App.css'; 
 
-  function agregarAlCarrito(producto) {
-    const productoExistente = carrito.find(item => item.id === producto.id);
+function Carrito({ carrito, obtenerCarrito, actualizarCantidad, eliminarDelCarrito, procederAlPago }) {
+  const [cantidades, setCantidades] = useState({});
+  const [mensaje, setMensaje] = useState('');
 
-    if (productoExistente) {
-      const nuevoCarrito = carrito.map(item => 
-        item.id === producto.id ? { ...item, cantidad: item.cantidad + 1 } : item
-      );
-      setCarrito(nuevoCarrito);
+  // Manejar el cambio en la cantidad
+  const handleCantidadChange = (producto_id, nuevaCantidad) => {
+    setCantidades(prev => ({
+      ...prev,
+      [producto_id]: nuevaCantidad
+    }));
+  };
+
+  const handleCantidadBlur = (producto_id) => {
+    const nuevaCantidad = Number(cantidades[producto_id]);
+    if (nuevaCantidad > 0) {
+      actualizarCantidad(producto_id, nuevaCantidad);
     } else {
-      setCarrito([...carrito, { ...producto, cantidad: 1 }]);
+      alert('La cantidad debe ser mayor que cero.');
     }
+  };
 
-    console.log("Producto agregado al carrito:", producto);
-    alert(`${producto.nombre} ha sido agregado al carrito.`);
-  }
+  useEffect(() => {
+    obtenerCarrito();
+  }, []);
 
   return (
-    <div className="App">
-      <h1>Tienda de Zapatos</h1>
-      <div className="contenedor">
-        <div className="productos-venta">
-          <ProductosVenta agregarAlCarrito={agregarAlCarrito} />
-        </div>
-        <div className="carrito">
-          <h2>Carrito</h2>
-          {carrito.map(item => (
-            <div key={item.id}>
-              <p>{item.nombre} - Cantidad: {item.cantidad}</p>
-            </div>
-          ))}
-        </div>
+    <div className="carrito-container">
+      <h2>Carrito de Compras</h2>
+      <div className="carrito-lista">
+        {carrito.map(item => (
+          <div key={item.producto_id} className="carrito-item">
+            <img src={`http://localhost:3000/${item.imagen}`} alt={item.nombre} style={{ width: '150px', height: '150px' }} />
+            <h3>{item.nombre}</h3>
+            <p>Precio: ${item.precio}</p>
+            <p>Total: ${item.precio_total}</p>
+            <p>Cantidad: 
+              <input
+                type="number"
+                value={cantidades[item.producto_id] || item.cantidad}
+                onChange={(e) => handleCantidadChange(item.producto_id, e.target.value)}
+                onBlur={() => handleCantidadBlur(item.producto_id)}
+              />
+            </p>
+            <button className="eliminar" onClick={() => eliminarDelCarrito(item.producto_id)}>Eliminar</button>
+          </div>
+        ))}
       </div>
+      <button className="proceder-pago" onClick={procederAlPago}>Proceder al Pago</button>
+      {mensaje && <p className="mensaje">{mensaje}</p>}
     </div>
   );
 }

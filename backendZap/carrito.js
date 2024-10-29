@@ -88,10 +88,9 @@ const procederAlPago = async (req, res) => {
 };
 
 const obtenerCarrito = async (req, res) => {
-    const nombreUsuario = req.session.usuario; // Nombre de usuario desde la sesión
+    const nombreUsuario = req.session.usuario;
 
     try {
-        // Obtener el ID del usuario a partir del nombre de usuario
         const [usuarios] = await connection.query(
             "SELECT id FROM usuarios WHERE usuario = ?", [nombreUsuario]
         );
@@ -102,9 +101,8 @@ const obtenerCarrito = async (req, res) => {
 
         const usuario_id = usuarios[0].id;
 
-        // Obtener el carrito del usuario
         const [carrito] = await connection.query(
-            `SELECT productos.nombre, productos.precio, carrito.cantidad
+            `SELECT productos.nombre, productos.precio, productos.imagen, carrito.cantidad, carrito.precio_total
              FROM carrito
              JOIN productos ON carrito.producto_id = productos.id
              WHERE carrito.usuario_id = ?`, [usuario_id]
@@ -117,6 +115,7 @@ const obtenerCarrito = async (req, res) => {
     }
 };
 
+// Función para editar la cantidad y actualizar el precio total
 const editarCarrito = async (req, res) => {
     const usuario_usu = req.session.usuario;
     const { producto_id, cantidad } = req.body;
@@ -130,7 +129,6 @@ const editarCarrito = async (req, res) => {
     }
 
     try {
-        // Buscar el usuario en la base de datos para obtener su ID
         const [usuario] = await connection.query(
             "SELECT id FROM usuarios WHERE usuario = ?", [usuario_usu]
         );
@@ -141,9 +139,8 @@ const editarCarrito = async (req, res) => {
 
         const usuario_id = usuario[0].id;
 
-        // Verificar que el producto está en el carrito del usuario
         const [productoEnCarrito] = await connection.query(
-            "SELECT cantidad FROM carrito WHERE usuario_id = ? AND producto_id = ?", 
+            "SELECT productos.precio FROM carrito JOIN productos ON carrito.producto_id = productos.id WHERE carrito.usuario_id = ? AND carrito.producto_id = ?", 
             [usuario_id, producto_id]
         );
 
@@ -151,17 +148,14 @@ const editarCarrito = async (req, res) => {
             return res.status(404).json({ error: 'Producto no encontrado en el carrito' });
         }
 
-        // Actualizar la cantidad del producto en el carrito
-        const [result] = await connection.query(
-            "UPDATE carrito SET cantidad = ? WHERE usuario_id = ? AND producto_id = ?",
-            [cantidad, usuario_id, producto_id]
+        const precioProducto = productoEnCarrito[0].precio;
+
+        await connection.query(
+            "UPDATE carrito SET cantidad = ?, precio_total = ? WHERE usuario_id = ? AND producto_id = ?",
+            [cantidad, cantidad * precioProducto, usuario_id, producto_id]
         );
 
-        if (result.affectedRows > 0) {
-            return res.status(200).json({ message: 'Cantidad actualizada en el carrito' });
-        } else {
-            return res.status(500).json({ error: 'Error al actualizar el carrito' });
-        }
+        return res.status(200).json({ message: 'Cantidad actualizada en el carrito y precio total modificado' });
     } catch (err) {
         console.error('Error al editar el carrito:', err);
         return res.status(500).json({ error: 'Error del servidor' });

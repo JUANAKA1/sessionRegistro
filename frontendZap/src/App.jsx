@@ -9,7 +9,8 @@ import Productos from './Productos'; // Importación del componente Productos
 import Navbar from './Navbar'; // Asegúrate de que el nombre sea correcto
 import ProductosVenta from './ProductosVenta';
 import Footer from './Footer';
-import Carrito from './Carrito';
+import Tienda from './Tienda';
+
 
 function App() {
   // Declaración de estados con useState
@@ -71,7 +72,7 @@ function App() {
                 <>
                     <Navbar tipoUsuario={tipoUsuario} /> {/* Pasa el tipo de usuario al Navbar */}
                     <Routes>
-                        <Route path="/productosVenta" element={<ProductosVenta />} />
+                        <Route path="/tienda" element={<Tienda />} />
                         
                         {tipoUsuario === 'administrador' && (
                             <>
@@ -82,10 +83,10 @@ function App() {
                             </>
                         )}
 
-                        <Route path="/productosVenta" element={<ProductosVenta recargar={recargar} />} /> 
+                        <Route path="/tienda" element={<Tienda recargar={recargar} />} /> 
                         <Route path="/conversor" element={<Conversor />} />
-                        <Route path="/carrito" element={<Carrito />} />
-                        <Route path="*" element={<Navigate to="/productosVenta" />} />
+                        
+                        <Route path="*" element={<Navigate to="/tienda" />} />
                     </Routes>
                     <Footer />
                 </>

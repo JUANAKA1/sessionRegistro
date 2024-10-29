@@ -5,58 +5,113 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Estilo de cada item en el carrito */
+.carrito-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  justify-content: space-between; /* Asegura que los elementos se distribuyan adecuadamente */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Estilo de los botones */
+button {
+  padding: 8px 16px;
+  background-color: #4caf50;
+  color: white; /* Cambié el color a blanco para mejor visibilidad */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  min-width: 100px; /* Establece un ancho mínimo para los botones */
 }
 
-.card {
-  padding: 2em;
+button:hover {
+  background-color: #45a049;
 }
 
-.read-the-docs {
-  color: #888;
-}
-.contenedor {
-  display: flex; /* Utiliza flexbox para la alineación */
-  justify-content: space-between; /* Espacio entre los elementos */
-  align-items: flex-start; /* Alinear los elementos en la parte superior */
+/* Estilo del botón de eliminar */
+button.eliminar {
+  background-color: #ff4c4c; /* Color rojo para el botón de eliminar */
+  margin-left: auto; /* Alinea el botón a la derecha */
 }
 
-.productos-venta {
-  flex: 2; /* Ocupa más espacio que el carrito */
-  margin-right: 20px; /* Espacio entre la sección de productos y el carrito */
+button.eliminar:hover {
+  background-color: #ff3b3b; /* Color al pasar el mouse */
 }
 
-.carrito {
-  flex: 1; /* Menos espacio para el carrito */
-  border: 1px solid #0b0a0a; /* Borde para el carrito */
-  padding: 10px; /* Espaciado interno */
-  background-color: #2e2b2b; /* Color de fondo */
-  max-height: 400px; /* Altura máxima para que no ocupe demasiado espacio */
-  overflow-y: auto; /* Habilita el scroll si hay muchos productos */
+/* Contenedor de la lista de productos */
+.productos-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background-color: #f7f8fa;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo de la lista de productos */
+.productos-lista {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsivo */
+  padding: 20px;
+  background-color: #f7f8fa;
+}
+
+/* Estilo de cada producto */
+.producto-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s; /* Animación al pasar el mouse */
+}
+
+.producto-card:hover {
+  transform: scale(1.05); /* Efecto de zoom al pasar el mouse */
+}
+
+.producto-card img {
+  border-radius: 8px;
+  max-width: 100%;
+  height: auto;
+}
+
+.producto-card h3 {
+  font-size: 1.5rem;
+  margin: 10px 0;
+  color: #333;
+}
+
+.producto-card p {
+  margin: 4px 0;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+/* Estilo de los botones */
+button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: rgb(10, 66, 98);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px; /* Espacio entre el texto y el botón */
+}
+
+button:hover {
+  background-color: #45a049;
 }
 
