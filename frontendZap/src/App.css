@@ -20,7 +20,7 @@
 /* Estilo de los botones */
 button {
   padding: 8px 16px;
-  background-color: #4caf50;
+  background-color: #3994c5;
   color: white; /* Cambié el color a blanco para mejor visibilidad */
   border: none;
   border-radius: 4px;
@@ -30,7 +30,7 @@ button {
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #3994c5;
 }
 
 /* Estilo del botón de eliminar */
@@ -102,7 +102,7 @@ button.eliminar:hover {
 /* Estilo de los botones */
 button {
   padding: 10px 20px;
-  background-color: #4caf50;
+  background-color: #8090f5;
   color: rgb(10, 66, 98);
   border: none;
   border-radius: 4px;
